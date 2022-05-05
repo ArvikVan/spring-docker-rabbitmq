@@ -59,6 +59,7 @@ public class RabbitConfiguration {
      * самое интересное, мой получатель
      * @return контейнер
      * указываем коннект - название очереди - и сообщение при его получении
+     * один из способов получения листенера
      */
     @Bean
     public SimpleMessageListenerContainer messageListenerContainer() {
