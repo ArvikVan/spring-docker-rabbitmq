@@ -2,13 +2,11 @@ package arv.springdockerrabbitmq;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author ArvikV
@@ -20,11 +18,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ProducerController {
     Logger logger = LoggerFactory.getLogger(ProducerController.class);
 
-    private final AmqpTemplate template;
+    private final RabbitTemplate template;
 
-    public ProducerController(AmqpTemplate template) {
+    public ProducerController(RabbitTemplate template) {
         this.template = template;
     }
+
 
     /**
      * добавлен цикл из случайных чисел которые мы будем сыпать в очередь
@@ -34,9 +33,8 @@ public class ProducerController {
     @PostMapping("/message")
     public ResponseEntity<String> sendingMessage(@RequestBody String message) {
         logger.info("Sending message to myQueue");
-        for (int i = 0; i < 10; i++) {
-            template.convertAndSend("myQueue", ThreadLocalRandom.current().nextInt());
-        }
+        template.setExchange("common-exchange");
+        template.convertAndSend("myQueue", message);
         return ResponseEntity.ok("Success of sending message");
     }
 }

@@ -2,8 +2,7 @@ package arv.springdockerrabbitmq;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -61,7 +60,7 @@ public class RabbitConfiguration {
      * указываем коннект - название очереди - и сообщение при его получении
      * один из способов получения листенера
      */
-    @Bean
+    /*@Bean
     public SimpleMessageListenerContainer messageListenerContainer() {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory());
@@ -69,5 +68,42 @@ public class RabbitConfiguration {
         container.setMessageListener(message -> logger.info("Received message from myQueue: "
                 + new String(message.getBody()) ));
         return container;
+    }*/
+
+    /**
+     * создаем вторую очередь
+     * @return очередь
+     */
+    @Bean
+    public Queue queue2() {
+        return new Queue("myQueue2");
+    }
+
+    /**
+     * создаем обменник, чтоб каждый слушатель получил одно сообщение сообщение, создаем свою очередь и
+     * ОБМЕННИК, в который мы посылаем общее сообщение, при том что между очередью есть связки(Binding)
+     * @return обменник
+     */
+    @Bean
+    public FanoutExchange fanoutExchange() {
+        return new FanoutExchange("common-exchange");
+    }
+
+    /**
+     * Связка для первой очереди
+     * @return свЯЗЬ
+     */
+    @Bean
+    public Binding binding() {
+        return BindingBuilder.bind(queue()).to(fanoutExchange());
+    }
+
+    /**
+     * Связка для второй очереди
+     * @return свЯЗЬ
+     */
+    @Bean
+    public Binding binding2() {
+        return BindingBuilder.bind(queue2()).to(fanoutExchange());
     }
 }

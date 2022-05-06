@@ -20,6 +20,7 @@ public class RabbitMqListener {
     /**
      * метод с помощью которого будем принимать сообщение
      * в параметрах аннотации указываем название очереди с которой должно придти сообщение
+     * указываем чтобы листенер слушал каждый свою очередь
      */
     @RabbitListener(queues = "myQueue")
     public void processMyQueue(String message) {
@@ -29,8 +30,9 @@ public class RabbitMqListener {
     /**
      * случай когда на одну очередь подписано два слушателя
      * @param message сообщение для вывода
+     *                указываем чтобы листенер слушал каждый свою очередь
      */
-    @RabbitListener(queues = "myQueue")
+    @RabbitListener(queues = "myQueue2")
     public void processMyQueue2(String message) {
         logger.info("Received from second myQueue with @RabbitListener: {} ", message);
     }
