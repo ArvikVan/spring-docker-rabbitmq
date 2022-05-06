@@ -23,6 +23,15 @@ public class RabbitMqListener {
      */
     @RabbitListener(queues = "myQueue")
     public void processMyQueue(String message) {
-        logger.info("Received from myQueue with @RabbitListener: {} ", message);
+        logger.info("Received from first myQueue with @RabbitListener: {} ", message);
+    }
+
+    /**
+     * случай когда на одну очередь подписано два слушателя
+     * @param message сообщение для вывода
+     */
+    @RabbitListener(queues = "myQueue")
+    public void processMyQueue2(String message) {
+        logger.info("Received from second myQueue with @RabbitListener: {} ", message);
     }
 }
