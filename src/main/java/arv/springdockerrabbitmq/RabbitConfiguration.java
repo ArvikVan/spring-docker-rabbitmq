@@ -106,4 +106,26 @@ public class RabbitConfiguration {
     public Binding binding2() {
         return BindingBuilder.bind(queue2()).to(fanoutExchange());
     }
+
+    /**
+     * для того чтобы каждый листенер отвечал за свое поле деятельности
+     * @return директ на выходе
+     * также необходим роутинг
+     */
+    @Bean
+    public DirectExchange directExchange() {
+        return new DirectExchange("direct-exchange");
+    }
+
+    /**
+     * указываем ключи с которым будет идти сообщение,
+     * по этому ключу будет определяться в какую очередь полетит сообщение, чтобы не перекладывать заботу
+     * об обработке на самого отправителя
+     * @return ключ
+     * к обменнику привязываем очередь с ключом
+     */
+    @Bean
+    public Binding bindingDE() {
+        return BindingBuilder.bind(queue()).to(directExchange()).with("error");
+    }
 }
