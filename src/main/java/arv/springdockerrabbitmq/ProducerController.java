@@ -29,6 +29,10 @@ public class ProducerController {
      * добавлен цикл из случайных чисел которые мы будем сыпать в очередь
      * @param message сообщение, на данной проверке не важно
      * @return на выходе получаем сообщение об успехе
+     * template.setExchange("выбрать необходимое из нижеперечисленного")
+     * common-exchange
+     * direct-exchange
+     * topic-exchange
      */
     @PostMapping("/message")
     public ResponseEntity<String> sendingMessage(@RequestBody String message) {

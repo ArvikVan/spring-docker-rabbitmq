@@ -128,4 +128,19 @@ public class RabbitConfiguration {
     public Binding bindingDE() {
         return BindingBuilder.bind(queue()).to(directExchange()).with("error");
     }
+
+    @Bean
+    public TopicExchange topicExchange() {
+        return new TopicExchange("topic-exchange");
+    }
+
+    /**
+     * в качестве ключа указываем регулярное выражение
+     * @return ключ
+     * к обменнику привязываем очередь
+     */
+    @Bean
+    public Binding bindingTE() {
+        return BindingBuilder.bind(queue()).to(topicExchange()).with("one.*");
+    }
 }
